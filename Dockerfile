@@ -39,8 +39,8 @@ WORKDIR /jetson-inference
 #
 # install development packages
 #
-RUN add-apt-repository --remove "deb https://apt.kitware.com/ubuntu/ $(lsb_release --codename --short) main" && \
-    apt-get update && \
+#RUN add-apt-repository --remove "deb https://apt.kitware.com/ubuntu/ $(lsb_release --codename --short) main" && \
+RUN    apt-get update && \
     apt-get purge -y '*opencv*' || echo "existing OpenCV installation not found" && \
     apt-get install -y --no-install-recommends \
             cmake \
@@ -80,7 +80,9 @@ COPY python/www/dash/requirements.txt /tmp/dash_requirements.txt
 RUN pip3 install --no-cache-dir --verbose --upgrade Cython && \
     pip3 install --no-cache-dir --verbose -r /tmp/pytorch_ssd_requirements.txt && \
     pip3 install --no-cache-dir --verbose -r /tmp/flask_requirements.txt && \
-    pip3 install --no-cache-dir --verbose -r /tmp/dash_requirements.txt
+    pip3 install --no-cache-dir --verbose -r /tmp/dash_requirements.txt && \
+    pip3 install --no-cache-dir --verbose matplotlib && \
+    pip3 install --no-cache-dir --verbose pyserial
     
     
 # 
@@ -132,4 +134,4 @@ RUN cd examples/my-recognition && \
     make
 
 # workaround for "cannot allocate memory in static TLS block"
-ENV LD_PRELOAD=${LD_PRELOAD}:/usr/lib/aarch64-linux-gnu/libgomp.so.1:/lib/aarch64-linux-gnu/libGLdispatch.so.0
+ENV LD_PRELOAD=${LD_PRELOAD}:/usr/lib/aarch64-linux-gnu/libgomp.so.1:/lib/aarch64-linux-gnu/libGLdispatch.so
